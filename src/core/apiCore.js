@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 
 export const getProducts = sortBy => {
-    return fetch(`http://localhost:5000/api/products?sortBy=${sortBy}&order=desc&limit=6`,{
+    return fetch(`https://newexemplify.herokuapp.com/api/products?sortBy=${sortBy}&order=desc&limit=6`,{
         method: "GET"
     })
     .then (response => {
@@ -12,7 +12,7 @@ export const getProducts = sortBy => {
 
 
 export const getCategories = () => {
-    return fetch(`http://localhost:5000/api/categories`, {
+    return fetch(`https://newexemplify.herokuapp.com/api/categories`, {
         method: "GET"
     })
         .then(res => {
@@ -25,7 +25,7 @@ export const getFilteredProducts = (skip, limit, filters = {}) => {
     const data = {
         limit, skip, filters
     };
-    return fetch(`http://localhost:5000/api/products/by/search`, {
+    return fetch(`https://newexemplify.herokuapp.com/api/products/by/search`, {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -43,7 +43,7 @@ export const getFilteredProducts = (skip, limit, filters = {}) => {
 
 export const list = params => {
     const query = queryString.stringify(params)
-    return fetch(`http://localhost:5000/api/products/search?${query}`, {
+    return fetch(`https://newexemplify.herokuapp.com/api/products/search?${query}`, {
         method: "GET"
     }) .then(response => {
           return response.json();
@@ -51,7 +51,7 @@ export const list = params => {
 };
 
 export const read = (productId) => {
-    return fetch(`http://localhost:5000/api/product/${productId}`, {
+    return fetch(`https://newexemplify.herokuapp.com/api/product/${productId}`, {
         method: "GET"
     })
         .then(res => {
@@ -61,8 +61,23 @@ export const read = (productId) => {
 };
 
 export const listRelated = (productId) => {
-    return fetch(`http://localhost:5000/api/products/related/${productId}`, {
+    return fetch(`https://newexemplify.herokuapp.com/api/products/related/${productId}`, {
         method: "GET"
+    })
+        .then(res => {
+            return res.json();
+        })
+        .catch(err => console.log(err));
+};
+
+export const getBraintreeClientToken = (userId, token) => {
+    return fetch(`https://newexemplify.herokuapp.com/api/braintree/getToken/${userId}`, {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
     })
         .then(res => {
             return res.json();

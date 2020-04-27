@@ -4,6 +4,7 @@
   "description": "e-book store",
   "main": "index.js",
   "dependencies": {
+    "braintree-web-drop-in-react": "^1.1.1",
     "dotenv": "^8.2.0",
     "moment": "^2.24.0",
     "query-string": "^6.12.1",
@@ -12,6 +13,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1"
   },
+  "proxy": "https://newexemplify.herokuapp.com",
+
   "devDependencies": {},
   "scripts": {
     "start": "react-scripts start",

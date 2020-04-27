@@ -1,7 +1,7 @@
 
 export const createCategory = (userId, token, category) =>{
     // console.log(name, email, password);
-   return fetch(`http://localhost:5000/api/category/create/${userId}`,{
+   return fetch(`https://newexemplify.herokuapp.com/api/category/create/${userId}`,{
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -21,7 +21,7 @@ export const createCategory = (userId, token, category) =>{
 
 export const createProduct = (userId, token, product) =>{
    
-   return fetch(`http://localhost:5000/api/product/create/${userId}`,{
+   return fetch(`https://newexemplify.herokuapp.com/api/product/create/${userId}`,{
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -40,7 +40,7 @@ export const createProduct = (userId, token, product) =>{
 
 
 export const getCategories = () => {
-    return fetch(`http://localhost:5000/api/categories`, {
+    return fetch(`https://newexemplify.herokuapp.com/api/categories`, {
         method: "GET"
     })
         .then(res => {

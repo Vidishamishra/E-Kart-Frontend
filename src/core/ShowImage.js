@@ -2,7 +2,7 @@ import React from 'react';
 
 const ShowImage = ({ item }) => (
     <div className="product-img">
-        <img src={`http://localhost:5000/api/product/photo/${item._id}`}
+        <img src={`https://newexemplify.herokuapp.com/api/product/photo/${item._id}`}
         alt={item.name}
         className="mb-3"
         style={{ maxHeight: "100%", maxWidth: "100%"}} />

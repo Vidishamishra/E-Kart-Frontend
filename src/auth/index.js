@@ -1,6 +1,6 @@
  export const signup = (user) =>{
     // console.log(name, email, password);
-   return fetch('http://localhost:5000/api/signup',{
+   return fetch('https://newexemplify.herokuapp.com/api/signup',{
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -19,7 +19,7 @@
 
 export const signin = (user) =>{
     // console.log(name, email, password);
-   return fetch('http://localhost:5000/api/signin',{
+   return fetch('https://newexemplify.herokuapp.com/api/signin',{
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -47,7 +47,7 @@ export const signout = next => {
     if(typeof window !== "undefined") {
         localStorage.removeItem("jwt");
         next();
-        return fetch('http://localhost:5000/api/signout',{
+        return fetch('https://newexemplify.herokuapp.com/api/signout',{
             method: "GET"
         })
             .then(response => {
