@@ -1,22 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
 import Card from './Card';
-import { getCategories } from './apiCore';
+import { getCategories, getFilteredProducts } from './apiCore';
 import Checkbox from './Checkbox';
-import {prices} from './fixedPrice';
+import { prices } from './fixedPrice';
 import RadioBox from './RadioBox';
 
 const Shop = () => {
 
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState(false);
+    const [limit, setLimit] = useState(6);
+    const [skip, setSkip] = useState(0);
+    const [size, setSize] = useState(0)
+    const [filteredResults, setFilteredResults] = useState(0);
     const [myFilters, setMyFilters] = useState({
-        filters : {category: [], price: []}
+        filters: { category: [], price: [] }
     });
 
-    const init = () =>{
+    const init = () => {
         getCategories().then(data => {
-            if (data.error){
+            if (data.error) {
                 setError(data.error)
             } else {
                 setCategories(data)
@@ -24,8 +28,44 @@ const Shop = () => {
         })
     }
 
-    useEffect (() =>{
+    const loadFilteredResults = newFilters => {
+        getFilteredProducts(skip, limit, newFilters).then(data => {
+            if (data.error) {
+                setError(data.error)
+            } else {
+                setFilteredResults(data.data)
+                setSize(data.size);
+                setSkip(0);
+            }
+        })
+    }
+
+    const loadMore = () => {
+        let toSkip = skip + limit
+        getFilteredProducts(toSkip, limit, myFilters.filters).then(data => {
+            if (data.error) {
+                setError(data.error)
+            } else {
+                setFilteredResults([...filteredResults, ...data.data])
+                setSize(data.size);
+                setSkip(toSkip);
+            }
+        })
+    }
+
+    const loadMoreButton = () => {
+        return (
+            size>0 && size >= limit && (
+                <button onClick={loadMore} className="btn btn-warning mb-5">
+                    Load More
+                </button>
+            )
+        )
+    }
+
+    useEffect(() => {
         init();
+        loadFilteredResults(skip, limit, myFilters.filters);
     }, []);
 
     //shop is the parent component using checkbox component , 
@@ -33,13 +73,33 @@ const Shop = () => {
     //from child component to the parent component i.e., shop
     const handleFilters = (filters, filterBy) => {
         // console.log(filters, filterBy);
-        const newFilters = {...myFilters}
+        const newFilters = { ...myFilters }
         newFilters.filters[filterBy] = filters;
+
+        if (filterBy === "price") {
+            let priceValues = handlePrice(filters);
+            newFilters.filters[filterBy] = priceValues;
+        }
+        loadFilteredResults(myFilters.filters);
         setMyFilters(newFilters);
+    };
+
+    const handlePrice = value => {
+        const data = prices;
+        let array = [];
+
+        for (let key in data) {
+            if (data[key]._id === parseInt(value)) {
+                array = data[key].array;
+            }
+        }
+        return array;
     }
 
+
+
     return (
-        <Layout title="Shop" description="Find your type" className="container-fluid" >
+        <Layout title="Shop" description="Find your cool" className="container-fluid" >
             <div className="row">
                 <div className="col-4">
                     <h4>Filter by categories</h4>
@@ -48,14 +108,28 @@ const Shop = () => {
                     </ul>
                     <h4>Filter by price range</h4>
                     <div>
-                        <RadioBox categories={categories} handleFilters={filters => handleFilters(filters, 'price')} />
+                        <RadioBox prices={prices} handleFilters={filters => handleFilters(filters, 'prices')} />
                     </div>
                 </div>
+
+                <div className="col-8">
+                    <h2 className="mb-4">Products</h2>
+                    <div className="row">
+                        {!!filteredResults && filteredResults.length > 0 && filteredResults.map((product, i) => (
+                             <div key={i} className="col-4 mb-3">
+                                 <Card  product={product} />
+                             </div>
+                        ))}
+
+
+                </div>
+                <hr />
+                {loadMoreButton()}
+                </div>
             </div>
-                <div className="col-8">Right</div>
-           
-        </Layout>
-    )
+        </Layout>)
+
+
 }
 
 export default Shop;
